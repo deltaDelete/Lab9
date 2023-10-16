@@ -1,21 +1,11 @@
 package ru.deltadelete.lab9;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.provider.DocumentsContract;
-import android.view.View;
-
-import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,18 +17,16 @@ import ru.deltadelete.lab9.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PERMISSION_REQUEST_CODE = 228123;
+    private static final int READ_PERMISSION_REQUEST_CODE = 2;
+    private static final int WRITE_PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
-    private final ActivityResultLauncher<String> files =  registerForActivityResult(new ActivityResultContracts.GetContent(), o -> {
-        String path = o.getPath();
-        Toast.makeText(this, path, Toast.LENGTH_LONG).show();
-        setFile(o);
-    });
     private GlobalViewModel globalViewModel;
 
     @Override
@@ -52,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
 
         NavHostFragment navHostFragment =
-                (NavHostFragment)(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main));
+                (NavHostFragment) (getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main));
         NavController navController = navHostFragment.getNavController();
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -60,7 +48,15 @@ public class MainActivity extends AppCompatActivity {
         globalViewModel = new ViewModelProvider(this).get(GlobalViewModel.class);
 
         binding.fab.setOnClickListener((view) -> {
-            files.launch("text/plain");
+            EditText edit = new EditText(this);
+            new MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered)
+                    .setTitle("Введите имя файла")
+                    .setView(edit)
+                    .setPositiveButton("Выбрать", (dialogInterface, i) -> {
+                        globalViewModel.setFile(edit.getText().toString());
+                    })
+                    .create()
+                    .show();
         });
     }
 
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void setFile(Uri file) {
+    private void setFile(String file) {
         globalViewModel.setFile(file);
     }
 }
