@@ -3,6 +3,7 @@ package ru.deltadelete.lab9;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -58,44 +59,42 @@ public class GlobalViewModel extends AndroidViewModel {
         return text;
     }
 
-    public Set<String> getFiles() {
-        if (this.files == null) {
-            SharedPreferences prefs = getApplication().getSharedPreferences(
-                    "Lab9",
-                    Context.MODE_PRIVATE
-            );
-            this.files = prefs.getStringSet("files", new HashSet<String>());
+    private File directory = new File(getApplication().getApplicationContext().getFilesDir(),
+            "/texts/");
+    public File[] getFiles() {
+        if (!directory.exists()) {
+            directory.mkdir();
         }
-        return this.files;
+        return directory.listFiles();
     }
 
-    public void setFiles(Set<String> files) {
-        this.files = files;
-        SharedPreferences prefs = getApplication().getSharedPreferences(
-                "Lab9",
-                Context.MODE_PRIVATE
-        );
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putStringSet("files", new HashSet<String>(files));
-        edit.apply();
-    }
+//    public void setFiles(Set<String> files) {
+//        this.files = files;
+//        SharedPreferences prefs = getApplication().getSharedPreferences(
+//                "Lab9",
+//                Context.MODE_PRIVATE
+//        );
+//        SharedPreferences.Editor edit = prefs.edit();
+//        edit.putStringSet("files", new HashSet<String>(files));
+//        edit.apply();
+//    }
 
-    public void addFile(String file) {
-        Set<String> files = getFiles();
-        files.add(file);
-        setFiles(files);
-    }
+//    public void addFile(String file) {
+//        Set<String> files = getFiles();
+//        files.add(file);
+//        setFiles(files);
+//    }
 
     public interface FileChangedListener {
         public void call(String file);
     }
 
     public static String readFile(Context context, String filename) {
-        if (filename.length() == 0) {
+        if (filename == null || filename.length() == 0) {
             return "";
         }
 
-        File file = new File(context.getFilesDir(), filename);
+        File file = new File(context.getFilesDir().getPath()+File.pathSeparator+"texts", filename);
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(file));
@@ -113,7 +112,7 @@ public class GlobalViewModel extends AndroidViewModel {
         if (fileName == null || fileName.length() == 0) {
             return;
         }
-        File file = new File(context.getFilesDir(), fileName);
+        File file = new File(context.getFilesDir().getPath()+File.pathSeparator+"texts", fileName);
 
         if (!file.exists()) {
             try {

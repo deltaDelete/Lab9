@@ -15,21 +15,19 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/new_file_button"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:icon="@drawable/baseline_insert_drive_file_24"
-            android:text="Создать новый файл"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:text="Создать новый файл"
+            app:icon="@drawable/baseline_insert_drive_file_24" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/load_files_button"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:icon="@drawable/baseline_edit_24"
-            android:text="Открыть ранее созданный файл"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:text="Открыть ранее созданный файл"
+            app:icon="@drawable/baseline_edit_24" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

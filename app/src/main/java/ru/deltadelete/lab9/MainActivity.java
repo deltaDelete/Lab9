@@ -46,18 +46,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         globalViewModel = new ViewModelProvider(this).get(GlobalViewModel.class);
-
-        binding.fab.setOnClickListener((view) -> {
-            EditText edit = new EditText(this);
-            new MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered)
-                    .setTitle("Введите имя файла")
-                    .setView(edit)
-                    .setPositiveButton("Выбрать", (dialogInterface, i) -> {
-                        globalViewModel.setFile(edit.getText().toString());
-                    })
-                    .create()
-                    .show();
-        });
     }
 
     @Override
