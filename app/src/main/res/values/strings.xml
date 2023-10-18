@@ -45,6 +45,6 @@
     </string>
     <string name="text">Text</string>
     <string name="open_text_file_to_edit">Open text file to edit</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open">Open</string>
+    <string name="save">Save</string>
 </resources>

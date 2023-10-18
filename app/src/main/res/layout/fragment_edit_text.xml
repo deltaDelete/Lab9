@@ -18,13 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:labelFor="@id/text"
         android:hint="@string/text">
 
         <EditText
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top" />
+            android:gravity="top"
+            android:importantForAutofill="no"
+            android:inputType="textLongMessage" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -33,6 +36,6 @@
         app:cornerRadius="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сохранить" />
+        android:text="@string/save" />
 
 </LinearLayout>

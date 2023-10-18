@@ -40,7 +40,9 @@ public class GlobalViewModel extends AndroidViewModel {
 
     public void setFile(String file) {
         this.file = file;
-        this.fileChangedListener.call(file);
+        if (this.fileChangedListener != null) {
+            this.fileChangedListener.call(file);
+        }
         Log.d(GlobalViewModel.class.getName(), String.format("File changed to %s", file));
     }
 
@@ -59,8 +61,7 @@ public class GlobalViewModel extends AndroidViewModel {
         return text;
     }
 
-    private File directory = new File(getApplication().getApplicationContext().getFilesDir(),
-            "/texts/");
+    private File directory = new File(getApplication().getApplicationContext().getFilesDir() + "/texts/");
     public File[] getFiles() {
         if (!directory.exists()) {
             directory.mkdir();
@@ -112,7 +113,7 @@ public class GlobalViewModel extends AndroidViewModel {
         if (fileName == null || fileName.length() == 0) {
             return;
         }
-        File file = new File(context.getFilesDir().getPath()+File.pathSeparator+"texts", fileName);
+        File file = new File(context.getFilesDir().getPath()+File.separator+"texts", fileName);
 
         if (!file.exists()) {
             try {

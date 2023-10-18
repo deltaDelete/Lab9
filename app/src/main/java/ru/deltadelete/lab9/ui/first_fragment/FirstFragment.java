@@ -97,28 +97,34 @@ public class FirstFragment extends Fragment {
 //        field.addView(edit);
 
 
-        AlertDialog dialog = new MaterialAlertDialogBuilder(
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(
                 context,
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
         )
-                .setTitle("Введите имя нового файла")
-                .setPositiveButton("Создать", (dialogInterface, i) -> {
-                    requireActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .add(R.id.nav_host_fragment_content_main,
-                                    EditTextFragment.newInstance(), "edit_text_fragment"
-                            )
-                            .addToBackStack("edit_text_fragment")
-                            .commit();
-                })
-                .setSingleChoiceItems(fileNames, 0, (dialogInterface, which) -> {
-                    fileToOpen.set(fileNames[which]);
-                    globalViewModel.setFile(fileToOpen.get());
-                })
-//                .setView(field)
-                .create();
+                .setTitle("Открыть предыдущий файл");
 
-        dialog.show();
+        if (fileNames.length == 0) {
+            dialogBuilder = dialogBuilder
+                    .setPositiveButton("Закрыть", (dialog, which) -> dialog.dismiss())
+                    .setMessage("Здесь ничего нет");
+        } else {
+            dialogBuilder = dialogBuilder
+                .setPositiveButton("Создать", (dialogInterface, i) -> {
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.nav_host_fragment_content_main,
+                                EditTextFragment.newInstance(), "edit_text_fragment"
+                        )
+                        .addToBackStack("edit_text_fragment")
+                        .commit();
+            })
+                    .setSingleChoiceItems(fileNames, 0, (dialogInterface, which) -> {
+                        fileToOpen.set(fileNames[which]);
+                        globalViewModel.setFile(fileToOpen.get());
+                    });
+        }
+
+        dialogBuilder.create().show();
     }
 
     @Override
@@ -141,7 +147,8 @@ public class FirstFragment extends Fragment {
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
         )
                 .setTitle("Введите имя нового файла")
-                .setPositiveButton("Создать", (dialogInterface, i) -> {
+                .setPositiveButton(R.string.open, (dialogInterface, i) -> {
+                    globalViewModel.setText("");
                     globalViewModel.setFile(edit.getText().toString());
                     requireActivity().getSupportFragmentManager()
                             .beginTransaction()
