@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -18,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +32,7 @@ public class GlobalViewModel extends AndroidViewModel {
     private String text;
     private Set<String> files;
     private String file;
+    private ArrayAdapter<String> adapter;
 
     public GlobalViewModel(@NonNull Application application) {
         super(application);
@@ -61,7 +65,7 @@ public class GlobalViewModel extends AndroidViewModel {
         return text;
     }
 
-    private File directory = new File(getApplication().getApplicationContext().getFilesDir() + "/texts/");
+    private final File directory = new File(getApplication().getApplicationContext().getFilesDir() + "/texts/");
     public File[] getFiles() {
         if (!directory.exists()) {
             directory.mkdir();
@@ -69,22 +73,14 @@ public class GlobalViewModel extends AndroidViewModel {
         return directory.listFiles();
     }
 
-//    public void setFiles(Set<String> files) {
-//        this.files = files;
-//        SharedPreferences prefs = getApplication().getSharedPreferences(
-//                "Lab9",
-//                Context.MODE_PRIVATE
-//        );
-//        SharedPreferences.Editor edit = prefs.edit();
-//        edit.putStringSet("files", new HashSet<String>(files));
-//        edit.apply();
-//    }
-
-//    public void addFile(String file) {
-//        Set<String> files = getFiles();
-//        files.add(file);
-//        setFiles(files);
-//    }
+    public ArrayAdapter<String> getAdapter(Context context) {
+        if (adapter == null) {
+            File[] files = getFiles();
+            List<String> filenames = Arrays.stream(files).map(File::getName).collect(Collectors.toList());
+            adapter = new ArrayAdapter<>(context, R.layout.file_item, R.id.text1, filenames);
+        }
+        return adapter;
+    }
 
     public interface FileChangedListener {
         public void call(String file);
@@ -95,7 +91,7 @@ public class GlobalViewModel extends AndroidViewModel {
             return "";
         }
 
-        File file = new File(context.getFilesDir().getPath()+File.pathSeparator+"texts", filename);
+        File file = new File(context.getFilesDir().getPath()+File.separator+"texts", filename);
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(file));
@@ -109,7 +105,7 @@ public class GlobalViewModel extends AndroidViewModel {
         return "";
     }
 
-    public static void writeFile(Context context, String text, String fileName) {
+    public void writeFile(Context context, String text, String fileName) {
         if (fileName == null || fileName.length() == 0) {
             return;
         }
@@ -117,7 +113,9 @@ public class GlobalViewModel extends AndroidViewModel {
 
         if (!file.exists()) {
             try {
-                file.createNewFile();
+                if (file.createNewFile()) {
+                    onFileCreated(file);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -132,5 +130,12 @@ public class GlobalViewModel extends AndroidViewModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void onFileCreated(File file) {
+        if (adapter == null) {
+            return;
+        }
+        adapter.add(file.getName());
     }
 }

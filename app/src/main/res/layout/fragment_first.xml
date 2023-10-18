@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@drawable/divider"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:showDividers="middle"
     tools:context=".ui.first_fragment.FirstFragment">
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/new_file_button"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:text="@string/create_new_file"
+        app:icon="@drawable/baseline_insert_drive_file_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/load_files_button"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:text="@string/open_previous"
+        app:icon="@drawable/baseline_edit_24" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:columnWidth="100dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        tools:listitem="@layout/file_item" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/new_file_button"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Создать новый файл"
-            app:icon="@drawable/baseline_insert_drive_file_24" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/load_files_button"
-            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Открыть ранее созданный файл"
-            app:icon="@drawable/baseline_edit_24" />
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

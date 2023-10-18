@@ -2,12 +2,19 @@
 <resources>
     <string name="app_name">Лаба 9</string>
     <string name="action_settings">Настройки</string>
-    <string name="first_fragment_label">Первый фрагмент</string>
-    <string name="second_fragment_label">Второй фрагмент</string>
+    <string name="first_fragment_label">Блокнот</string>
+    <string name="second_fragment_label">Записка</string>
     <string name="next">Далее</string>
     <string name="previous">Назад</string>
     <string name="text">Текст</string>
     <string name="open_text_file_to_edit">Открыть текстовый документ для изменения</string>
     <string name="open">Открыть</string>
     <string name="save">Сохранить</string>
+    <string name="close">Закрыть</string>
+    <string name="nothing">Здесь ничего нет</string>
+    <string name="open_previous">Открыть предыдущий файл</string>
+    <string name="create">Создать</string>
+    <string name="filename">Название файла</string>
+    <string name="new_filename">Введите имя нового файла</string>
+    <string name="create_new_file">Создать новый файл</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,6 +20,7 @@ import java.io.FileReader;
 import java.util.stream.Collectors;
 
 import ru.deltadelete.lab9.GlobalViewModel;
+import ru.deltadelete.lab9.MainActivity;
 import ru.deltadelete.lab9.R;
 import ru.deltadelete.lab9.TextChangedListener;
 import ru.deltadelete.lab9.databinding.FragmentEditTextBinding;
@@ -27,6 +29,7 @@ public class EditTextFragment extends Fragment {
 
     private FragmentEditTextBinding binding;
     private GlobalViewModel globalViewModel;
+    private ActionBar actionBar;
 
     public EditTextFragment() {
         // Required empty public constructor
@@ -50,6 +53,11 @@ public class EditTextFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentEditTextBinding.inflate(inflater, container, false);
         globalViewModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
+
+        actionBar = ((MainActivity)requireActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         return binding.getRoot();
     }
 
@@ -62,7 +70,9 @@ public class EditTextFragment extends Fragment {
             globalViewModel.setText(editable.toString());
         }));
         binding.saveButton.setOnClickListener(view1 -> {
-            GlobalViewModel.writeFile(requireContext(), globalViewModel.getText(),
+            globalViewModel.writeFile(
+                    requireContext(),
+                    globalViewModel.getText(),
                     globalViewModel.getFile());
         });
     }
@@ -71,5 +81,6 @@ public class EditTextFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 }

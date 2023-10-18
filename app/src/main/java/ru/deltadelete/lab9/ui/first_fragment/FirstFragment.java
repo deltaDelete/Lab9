@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,24 @@ public class FirstFragment extends Fragment {
 
         binding.newFileButton.setOnClickListener(this::newFileClick);
         binding.loadFilesButton.setOnClickListener(this::loadFilesClick);
+        initGrid();
+    }
+
+    private void initGrid() {
+        ArrayAdapter<String> adapter = globalViewModel.getAdapter(requireContext());
+        binding.gridview.setAdapter(adapter);
+        binding.gridview.setOnItemClickListener((parent, view, position, id) -> {
+            String file = adapter.getItem(position);
+            globalViewModel.setFile(file);
+            globalViewModel.setText(null);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.nav_host_fragment_content_main,
+                            EditTextFragment.newInstance(), "edit_text_fragment"
+                    )
+                    .addToBackStack("edit_text_fragment")
+                    .commit();
+        });
     }
 
     private void loadFilesClick(View view) {
@@ -70,57 +89,33 @@ public class FirstFragment extends Fragment {
 
         AtomicReference<String> fileToOpen = new AtomicReference<>("");
 
-//        ContextThemeWrapper themeContext = new ContextThemeWrapper(context,
-//                com.google.android.material.R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox_ExposedDropdownMenu);
-//
-//        TextInputLayout field = new TextInputLayout(themeContext);
-//        field.setPadding(16, 16, 16, 16);
-//        field.setHint("Название файла");
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(themeContext,
-//                android.R.layout.simple_dropdown_item_1line, fileNames);
-//        MaterialAutoCompleteTextView edit = new MaterialAutoCompleteTextView(themeContext);
-//        edit.setAdapter(adapter);
-//        edit.setInputType(0);
-//        edit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                fileToOpen.set(fileNames[i]);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//                fileToOpen.set("");
-//            }
-//        });
-//
-//        field.addView(edit);
-
-
         MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(
                 context,
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
         )
-                .setTitle("Открыть предыдущий файл");
+                .setTitle(R.string.open_previous);
 
         if (fileNames.length == 0) {
             dialogBuilder = dialogBuilder
-                    .setPositiveButton("Закрыть", (dialog, which) -> dialog.dismiss())
-                    .setMessage("Здесь ничего нет");
+                    .setPositiveButton(R.string.close, (dialog, which) -> dialog.dismiss())
+                    .setMessage(R.string.nothing);
         } else {
             dialogBuilder = dialogBuilder
-                .setPositiveButton("Создать", (dialogInterface, i) -> {
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.nav_host_fragment_content_main,
-                                EditTextFragment.newInstance(), "edit_text_fragment"
-                        )
-                        .addToBackStack("edit_text_fragment")
-                        .commit();
-            })
+                    .setPositiveButton(R.string.open, (dialogInterface, i) -> {
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .add(R.id.nav_host_fragment_content_main,
+                                        EditTextFragment.newInstance(), "edit_text_fragment"
+                                )
+                                .addToBackStack("edit_text_fragment")
+                                .commit();
+                    })
                     .setSingleChoiceItems(fileNames, 0, (dialogInterface, which) -> {
                         fileToOpen.set(fileNames[which]);
                         globalViewModel.setFile(fileToOpen.get());
+                        globalViewModel.setText(
+                                GlobalViewModel.readFile(requireContext(), fileToOpen.get())
+                        );
                     });
         }
 
@@ -137,7 +132,7 @@ public class FirstFragment extends Fragment {
         Context context = requireContext();
         TextInputLayout field = new TextInputLayout(context);
         field.setPadding(16, 16, 16, 16);
-        field.setHint("Название файла");
+        field.setHint(R.string.filename);
 
         EditText edit = new EditText(context);
         field.addView(edit);
@@ -146,7 +141,7 @@ public class FirstFragment extends Fragment {
                 context,
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog_Centered
         )
-                .setTitle("Введите имя нового файла")
+                .setTitle(R.string.new_filename)
                 .setPositiveButton(R.string.open, (dialogInterface, i) -> {
                     globalViewModel.setText("");
                     globalViewModel.setFile(edit.getText().toString());
