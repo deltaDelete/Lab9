@@ -2,16 +2,11 @@ package ru.deltadelete.lab9;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-
-import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,18 +14,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GlobalViewModel extends AndroidViewModel {
     private FileChangedListener fileChangedListener;
-    private Boolean writePermission;
     private String text;
-    private Set<String> files;
     private String file;
     private ArrayAdapter<String> adapter;
 
@@ -65,7 +55,9 @@ public class GlobalViewModel extends AndroidViewModel {
         return text;
     }
 
-    private final File directory = new File(getApplication().getApplicationContext().getFilesDir() + "/texts/");
+    private final File directory = new File(
+            getApplication().getApplicationContext().getFilesDir() + "/texts/"
+    );
     public File[] getFiles() {
         if (!directory.exists()) {
             directory.mkdir();

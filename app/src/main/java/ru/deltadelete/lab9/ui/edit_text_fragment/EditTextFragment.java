@@ -54,7 +54,7 @@ public class EditTextFragment extends Fragment {
         binding = FragmentEditTextBinding.inflate(inflater, container, false);
         globalViewModel = new ViewModelProvider(requireActivity()).get(GlobalViewModel.class);
 
-        actionBar = ((MainActivity)requireActivity()).getSupportActionBar();
+        actionBar = ((MainActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -68,6 +68,11 @@ public class EditTextFragment extends Fragment {
         binding.text.setText(globalViewModel.getText());
         binding.text.addTextChangedListener(new TextChangedListener(editable -> {
             globalViewModel.setText(editable.toString());
+            globalViewModel.writeFile(
+                    requireContext(),
+                    globalViewModel.getText(),
+                    globalViewModel.getFile()
+            );
         }));
         binding.saveButton.setOnClickListener(view1 -> {
             globalViewModel.writeFile(
